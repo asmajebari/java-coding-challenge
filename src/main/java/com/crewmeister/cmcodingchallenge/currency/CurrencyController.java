@@ -1,6 +1,9 @@
 package com.crewmeister.cmcodingchallenge.currency;
+import com.crewmeister.cmcodingchallenge.currency.dto.ConversionResult;
 import com.crewmeister.cmcodingchallenge.currency.dto.CurrencyConversionData;
+import com.crewmeister.cmcodingchallenge.currency.dto.DatabaseMessage;
 import com.crewmeister.cmcodingchallenge.currency.repositories.CurrencyRepo;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,8 +21,8 @@ public class CurrencyController {
     CurrencyRepo currencyRepo;
 
     // Initiliaze database with all data from api or starting from certain date
-    @GetMapping("/initDB")
-    public ResponseEntity<String> initDB(@RequestParam(required = false) String startDate){
+    @GetMapping("/init-database")
+    public ResponseEntity<DatabaseMessage> initDB(@RequestParam(required = false) String startDate){
        return this.currencyService.initializeDB(startDate);
     }
 
@@ -43,7 +46,7 @@ public class CurrencyController {
 
     // Convert certain amount of given currency on a given date to Euro
     @PostMapping("/currencies/conversion")
-    public ResponseEntity<String> convertToEuro(@RequestBody CurrencyConversionData conversionData){
+    public ResponseEntity<ConversionResult> convertToEuro(@RequestBody CurrencyConversionData conversionData){
        return this.currencyService.convertToEuro(conversionData);
     }
 

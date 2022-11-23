@@ -12,7 +12,6 @@ import com.crewmeister.cmcodingchallenge.currency.repositories.CurrencyRepo;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -143,14 +142,21 @@ public class CurrencyService {
 
     }
 
+    // add try catch?
     // Initialize database(currencies table and exchange rate table)
-    public ResponseEntity<String> initializeDB(String startDate){
-        ResponseData allData = this.fetchAllData(startDate);
-        this.initializeCurrenciesTable(allData);
-        this.fillExchangeRateTable(allData);
-        JSONObject message = new JSONObject();
-        message.put("message", "Database initialization done!");
-        return new ResponseEntity<>(message.toString(), HttpStatus.OK);
+    public ResponseEntity<DatabaseMessage> initializeDB(String startDate){
+        try {
+            ResponseData allData = this.fetchAllData(startDate);
+            this.initializeCurrenciesTable(allData);
+            this.fillExchangeRateTable(allData);
+            DatabaseMessage message = new DatabaseMessage("Database initialization done!");
+            return new ResponseEntity<>(message, HttpStatus.OK);
+        } catch(Exception e){
+            DatabaseMessage message = new DatabaseMessage("Please provide the correct URL format");
+            return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+        }
+
+
     }
 
     // Add latest data available to DB
@@ -202,17 +208,15 @@ public class CurrencyService {
 
 
     // Convert certain amount of given currency on a given date to Euro
-    public double convertAmount(double amount, float exchangeRate){
-        return amount/exchangeRate;
-    }
-    public ResponseEntity<String> convertToEuro(CurrencyConversionData conversionData){
+    public ResponseEntity<ConversionResult> convertToEuro(CurrencyConversionData conversionData){
         try{
             CurrencyExchangeRate exchangeRate = currencyExchangeRepo.findByCurrencyExchangeRateId(new CurrencyExchangeRateId(new Currency(conversionData.getCurrency()), conversionData.getDate()));
-
             if(exchangeRate == null){
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
-            return new ResponseEntity<>(this.convertAmount(conversionData.getAmount(), exchangeRate.getExchange_rate())+"€", HttpStatus.OK);
+            String convertedAmount = conversionData.convertAmount(exchangeRate.getExchange_rate());
+            return new ResponseEntity<>(new ConversionResult(convertedAmount), HttpStatus.OK);
+            //return new ResponseEntity<>(conversionData.convertAmount(exchangeRate.getExchange_rate())+"€", HttpStatus.OK);
         }catch(Exception e){
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
