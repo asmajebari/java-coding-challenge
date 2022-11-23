@@ -37,4 +37,16 @@ public class CurrencyExchangeRateId implements Serializable {
     public void setDate(String date) {
         this.date = date;
     }
+
+    @Override
+    public String toString() {
+        return "CurrencyExchangeRateId{" +
+                "currency=" + currency +
+                ", date='" + date + '\'' +
+                '}';
+    }
+
+    public String toJsonString(){
+        return "{\"currency\":"+currency.toJsonString()+", \"date\":"+"\""+date+"\"}";
+    }
 }

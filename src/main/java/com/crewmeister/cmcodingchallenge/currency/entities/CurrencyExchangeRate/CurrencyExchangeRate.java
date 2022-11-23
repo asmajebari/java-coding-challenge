@@ -37,4 +37,16 @@ public class CurrencyExchangeRate {
     public void setExchange_rate(float exchange_rate) {
         this.exchangeRate = exchange_rate;
     }
+
+    @Override
+    public String toString() {
+        return "CurrencyExchangeRate{" +
+                "currencyExchangeRateId=" + currencyExchangeRateId +
+                ", exchangeRate=" + exchangeRate +
+                '}';
+    }
+
+    public String toJsonString(){
+        return "{\"currencyExchangeRateId\":"+currencyExchangeRateId.toJsonString()+", \"exchangeRate\":"+exchangeRate+"}";
+    }
 }

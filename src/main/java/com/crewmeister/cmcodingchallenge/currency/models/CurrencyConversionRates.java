@@ -1,4 +1,4 @@
-package com.crewmeister.cmcodingchallenge.currency;
+package com.crewmeister.cmcodingchallenge.currency.models;
 
 public class CurrencyConversionRates {
     private double conversionRate;

@@ -28,5 +28,15 @@ public class Currency{
         this.currencyId = currencyId;
     }
 
+    @Override
+    public String toString() {
+        return "Currency{" +
+                "currencyId='" + currencyId + '\'' +
+                '}';
+    }
 
+
+    public String toJsonString(){
+        return "{\"currencyId\":"+"\""+currencyId+"\"}";
+    }
 }
