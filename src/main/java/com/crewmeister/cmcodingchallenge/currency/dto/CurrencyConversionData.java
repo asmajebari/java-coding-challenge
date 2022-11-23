@@ -1,4 +1,4 @@
-package com.crewmeister.cmcodingchallenge.currency.models;
+package com.crewmeister.cmcodingchallenge.currency.dto;
 
 public class CurrencyConversionData {
     private double amount;
