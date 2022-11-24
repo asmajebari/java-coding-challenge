@@ -86,7 +86,9 @@ You can see that retrieving data from the API on a particular day can take more 
 
 ![image](https://user-images.githubusercontent.com/61097141/203682684-a530d0b3-043b-4d52-bb1a-cd09f669c668.png)
 
-I should also mention that I have setup a cron job on 4PM of every day, which retrieves the latest data from the service, because the service updates its data at that time.
+I should also mention that I have setup a cron job on 4PM of every day, which retrieves the latest data from the service and saves it to the database, because the service updates its data at that time.
+
+---
 
 [1] https://start.spring.io/
 
