@@ -90,6 +90,7 @@ I should also mention that I have setup a cron job on 4PM of every day, which re
 
 ---
 
+
 [1] https://start.spring.io/
 
 [2] [Bundesbank Daily Exchange Rates](https://www.bundesbank.de/dynamic/action/en/statistics/time-currencies-databases/time-currencies-databases/759784/759784?statisticType=BBK_ITS&listId=www_sdks_b01012_3&treeAnchor=WECHSELKURSE)
