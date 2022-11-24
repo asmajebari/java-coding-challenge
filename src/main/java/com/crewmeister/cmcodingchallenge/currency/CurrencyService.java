@@ -37,6 +37,11 @@ public class CurrencyService {
     @Autowired
     CurrencyExchangeRateRepo currencyExchangeRepo;
 
+    public CurrencyService(CurrencyRepo currencyRepo, CurrencyExchangeRateRepo currencyExchangeRepo) {
+        this.currencyRepo = currencyRepo;
+        this.currencyExchangeRepo = currencyExchangeRepo;
+    }
+
     // Use webClient to fetch data from API
     public WebClient.ResponseSpec fetchData(String URI){
        return webClient.get().uri(URI).retrieve();
@@ -222,13 +227,6 @@ public class CurrencyService {
         }
     }
 
-    // Schedule cron job on 4PM every day to update DB with the latest data from API
-    @Scheduled(cron="0 0 16 * * ?", zone="UTC")
-    public void updateDB() {
-        this.addLatestDataToDB();
-    }
-
-
     // Format exchange rate data received from DB to List of Maps
     public List<Map<String, Map<String, Float>>> formatResult(List<CurrencyExchangeRate> input){
         List<String> currencies = currencyRepo.findAll().stream().map(Currency::getCurrencyId).collect(Collectors.toList());
@@ -268,6 +266,11 @@ public class CurrencyService {
         return result;
     }
 
+    // Schedule cron job on 4PM every day to update DB with the latest data from API
+    @Scheduled(cron="0 0 16 * * ?", zone="UTC")
+    public void updateDB() {
+        this.addLatestDataToDB();
+    }
 
     public static float withBigDecimal(float value, int places) {
         BigDecimal bigDecimal = new BigDecimal(value);

@@ -39,8 +39,7 @@ public class CurrencyConversionData {
     }
 
     public String convertAmount(float exchangeRate){
-        System.out.println(this.amount);
-        System.out.println(exchangeRate);
-        return this.amount/exchangeRate + "€";
+        double convertedAmount = this.amount/exchangeRate;
+        return  String.format("%.3f",convertedAmount)+ "€";
     }
 }
