@@ -31,18 +31,28 @@ $ mvn spring-boot:run
 ````
 ## Solution
 ### IMPORTANT
-For this challenge, I have opted for using an H2 database, which will store data received from the Bank API. I have supposed that in a production environment, the database would already be setup, so the first thing to do is to go to http://localhost:8080/api/init-database?startDate=2022-01-01 , in your brower or your favorite API platform, as an example to initialize the database with data retrieved from the Bank API starting from the past year. 
+For this challenge, I have opted for using an H2 database, which will store data received from the Bank API. I have supposed that in a production environment, the database would already be setup, so the first thing to do is to make this request: `GET http://localhost:8080/api/init-database?startDate=2022-01-01`, in your brower or your favorite API platform, as an example to initialize the database with data retrieved from the Bank API starting from the past year. 
 
-I recommend using the startDate query parameter and typing in a starting date to retrieve data(from the last year or couple of years or so) instead of simply initializing the database with all the data received from the Bank API (by going to http://localhost:8080/api/init-database) because it would initialize the database much faster(will probably take about 2 minutes if you start from 2021-01-01), as storing all the data available from the Bank API would take so much time, and this would still give you the ability to use this service.
+I recommend using the ***startDate*** query parameter and typing in a starting date to retrieve data (from the last year or couple of years or so) instead of simply initializing the database with all the data received from the Bank API (by making a request to `GET http://localhost:8080/api/init-database`) because it would initialize the database much faster (will probably take about 2 minutes if you start from 2021-01-01), as storing all the data available from the Bank API would take so much time, and this would still give you the ability to use this service.
 
 
 I have opted for this solution because I believe that, for the client, the response time would be much faster than simply retrieving the data from the Bank API and serving it back.
+
+> **Note**
+> I should also mention that I have setup a cron job on 4PM of every day, which retrieves the latest data from the service and saves it to the database, because the Bank service updates its data at that time. This is because if the database is already setup, it needs to be up-to-date with the Bank service. I have achieved this by scheduling the following function to run at the specified time:
+```java
+    @Scheduled(cron="0 0 16 * * ?", zone="UTC")
+    public void updateDB() {
+        this.addLatestDataToDB();
+    }
+```
+
 
 The result of initiliazing the database would be something like this:
 
 ![image](https://user-images.githubusercontent.com/61097141/203678043-d93f8e04-8d94-4081-9225-0c2cb42204bd.png)
 
-You can now check the database, which will have two tables, by going to http://localhost:8080/h2-console on your browser.
+You can now check the database, which will have two tables, by going to `GET http://localhost:8080/h2-console` on your browser.
 
 ### Using the service
 
@@ -51,7 +61,7 @@ Now that the database is all setup, we can test the service!
 For all four user stories, I created four endpoints.
 
 For the last request, a CurrencyConversionData object is required in body, this is an example: 
-```
+```json
 {
    "amount": "200",
    "date": "2022-09-06",
@@ -81,12 +91,13 @@ Let's try out these endpoints!
 ![image](https://user-images.githubusercontent.com/61097141/203680920-85886fe5-6798-435a-a917-f5eecb0b724b.png)
 
 
-*Side Note:*
-You can see that retrieving data from the Bank API on a particular day can take more than to 1s compared to 16ms by retrieving the data from the database.
+
+> **Note**
+> **You can see that retrieving data from the Bank API on a particular day can take more than to 1s compared to 16ms by retrieving the data from the database.**
 
 ![image](https://user-images.githubusercontent.com/61097141/203682684-a530d0b3-043b-4d52-bb1a-cd09f669c668.png)
 
-I should also mention that I have setup a cron job on 4PM of every day, which retrieves the latest data from the service and saves it to the database, because the Bank service updates its data at that time.
+
 
 ---
 
